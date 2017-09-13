@@ -165,7 +165,7 @@ class Vgg16():
         """
         model = self.model
         model.pop()
-        for layer in model.layers[:model.layers - learn_deep]:
+        for layer in model.layers[:len(model.layers) - learn_deep]:
             layer.trainable = False
 
         model.add(Dense(num, activation='softmax'))
