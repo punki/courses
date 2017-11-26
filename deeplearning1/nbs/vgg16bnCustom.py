@@ -72,7 +72,7 @@ class Vgg16BNCustom():
         model.add(Dropout(self.drop_out))
 
     def create(self, size, include_top):
-        print("version 3")
+        print("version 4")
         if size != (224, 224):
             include_top = False
 
