@@ -93,7 +93,6 @@ class Vgg16BNCustom():
         model.add(Flatten())
         self.FCBlock()
         self.FCBlock()
-        self.FCBlock()
         model.add(Dense(1000, activation='softmax'))
 
         fname = 'vgg16_bn.h5'
@@ -110,6 +109,7 @@ class Vgg16BNCustom():
         print("will fix # layers: %d" % fix)
         for layer in model.layers[:fix]: layer.trainable = False
 
+        self.FCBlock()
         self.FCBlock()
         model.add(Dense(num, activation='softmax'))
         self.compile(lr=self.lr)
