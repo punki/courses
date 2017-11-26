@@ -72,7 +72,7 @@ class Vgg16BNCustom():
         model.add(Dropout(self.drop_out))
 
     def create(self, size, include_top):
-        print("version 4")
+        print("version 5")
         if size != (224, 224):
             include_top = False
 
@@ -91,6 +91,7 @@ class Vgg16BNCustom():
             return
 
         model.add(Flatten())
+        self.FCBlock()
         self.FCBlock()
         self.FCBlock()
         model.add(Dense(1000, activation='softmax'))
