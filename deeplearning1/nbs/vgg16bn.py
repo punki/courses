@@ -20,7 +20,12 @@ from keras.preprocessing import image
 from keras import backend as K
 K.set_image_dim_ordering('th')
 
-vgg_mean = np.array([123.68, 116.779, 103.939], dtype=np.float32).reshape((3,1,1))
+#state farm
+vgg_mean  = np.array([103.939, 116.779, 123.68], dtype=np.float32).reshape((3,1,1))
+
+#normal
+#vgg_mean = np.array([123.68, 116.779, 103.939], dtype=np.float32).reshape((3,1,1))
+
 def vgg_preprocess(x):
     x = x - vgg_mean
     return x[:, ::-1] # reverse axis rgb->bgr

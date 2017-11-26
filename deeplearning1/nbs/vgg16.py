@@ -42,7 +42,7 @@ class Vgg16():
     """
 
 
-    def __init__(self):
+    def __init__(self,saved_weights=None):
         self.FILE_PATH = 'http://files.fast.ai/models/'
         self.create()
         self.get_classes()
@@ -137,6 +137,7 @@ class Vgg16():
 
         fname = 'vgg16.h5'
         model.load_weights(get_file(fname, self.FILE_PATH+fname, cache_subdir='models'))
+            
 
 
     def get_batches(self, path, gen=image.ImageDataGenerator(), shuffle=True, batch_size=8, class_mode='categorical'):

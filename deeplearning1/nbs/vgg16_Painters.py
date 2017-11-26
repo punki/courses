@@ -22,6 +22,7 @@ from keras import backend as K
 K.set_image_dim_ordering('th')
 
 vgg_mean = np.array([123.68, 116.779, 103.939], dtype=np.float32).reshape((3, 1, 1))
+#vgg_mean = np.array([ 132.569,  118.853,  103.053], dtype=np.float32).reshape((3, 1, 1))
 
 
 def vgg_preprocess(x):
@@ -166,6 +167,7 @@ class Vgg16():
         model = self.model
         model.pop()
         for layer in model.layers[:len(model.layers) - learn_deep]:
+            print("ustawiam trainable na false")
             layer.trainable = False
 
         model.add(Dense(num, activation='softmax'))
