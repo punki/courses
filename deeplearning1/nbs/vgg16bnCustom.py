@@ -36,10 +36,12 @@ def vgg_preprocess(x):
 class Vgg16BN():
     """The VGG 16 Imagenet model with Batch Normalization for the Dense Layers"""
 
-    def __init__(self, size=(224, 224), include_top=True):
+    def __init__(self, size=(224, 224), include_top=True, drop_out=0.5, lr=0.001):
         self.FILE_PATH = 'http://files.fast.ai/models/'
         self.create(size, include_top)
         self.get_classes()
+        self.drop_out = drop_out
+        self.lr = lr
 
     def get_classes(self):
         fname = 'imagenet_class_index.json'
@@ -66,7 +68,7 @@ class Vgg16BN():
         model = self.model
         model.add(Dense(4096, activation='relu'))
         model.add(BatchNormalization())
-        model.add(Dropout(0.5))
+        model.add(Dropout(self.drop_out))
 
     def create(self, size, include_top):
         if size != (224, 224):
@@ -105,7 +107,7 @@ class Vgg16BN():
         print("will fix # layers: %d" % fix)
         for layer in model.layers[:fix]: layer.trainable = False
         model.add(Dense(num, activation='softmax'))
-        self.compile()
+        self.compile(lr=self.lr)
 
     def how_many_to_fix(self, fix_only_conv_net):
         model = self.model
