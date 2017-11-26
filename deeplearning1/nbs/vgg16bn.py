@@ -103,15 +103,28 @@ class Vgg16BN():
                 class_mode=class_mode, shuffle=shuffle, batch_size=batch_size)
 
 
-    def ft(self, num):
+    def ft(self, num,fix_only_conv_net):
         model = self.model
         model.pop()
-        for layer in model.layers: layer.trainable=False
+        fix = self.how_many_to_fix(fix_only_conv_net)
+        print("will fix # layers: %d"%fix)
+        for layer in model.layers[:fix]: layer.trainable=False
         model.add(Dense(num, activation='softmax'))
         self.compile()
 
-    def finetune(self, batches):
-        self.ft(batches.nb_class)
+    def how_many_to_fix(self, fix_only_conv_net):
+        model = self.model
+        layers = model.layers
+        if fix_only_conv_net:
+            last_conv_idx = [index for index,layer in enumerate(layers) 
+                         if type(layer) is Convolution2D][-1]
+            print("lest conv layer: %d"%last_conv_idx)
+            return last_conv_idx
+        else:
+            return len(layers)
+      
+    def finetune(self, batches,fix_only_conv_net=False):
+        self.ft(batches.nb_class,fix_only_conv_net)
 
         classes = list(iter(batches.class_indices))
         for c in batches.class_indices:
