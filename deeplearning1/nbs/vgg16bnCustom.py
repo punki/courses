@@ -117,9 +117,6 @@ class Vgg16BNCustom():
 
         self.FCBlock()
         self.FCBlock()
-
-        if not self.use_bn:
-            model.
         model.add(Dense(num, activation='softmax'))
         self.compile(lr=self.lr)
 
