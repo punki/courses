@@ -68,12 +68,16 @@ class Vgg16BNCustom():
     def FCBlock(self):
         model = self.model
         model.add(Dense(4096, activation='relu'))
-        if self.use_bn:
-            model.add(BatchNormalization())
+
+        normalization = BatchNormalization()
+        if not self.use_bn:
+            normalization.trainable = False
+        model.add(normalization)
+
         model.add(Dropout(self.drop_out))
 
     def create(self, size, include_top):
-        print("version 5")
+        print("version 6")
         if size != (224, 224):
             include_top = False
 
@@ -106,12 +110,16 @@ class Vgg16BNCustom():
     def ft(self, num, fix_only_conv_net):
         model = self.model
         model.pop()
+
         fix = self.how_many_to_fix(fix_only_conv_net)
         print("will fix # layers: %d" % fix)
         for layer in model.layers[:fix]: layer.trainable = False
 
         self.FCBlock()
         self.FCBlock()
+
+        if not self.use_bn:
+            model.
         model.add(Dense(num, activation='softmax'))
         self.compile(lr=self.lr)
 
