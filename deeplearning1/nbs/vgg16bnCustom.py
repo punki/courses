@@ -36,13 +36,13 @@ def vgg_preprocess(x):
 class Vgg16BNCustom():
     """The VGG 16 Imagenet model with Batch Normalization for the Dense Layers"""
 
-    def __init__(self, size=(224, 224), include_top=True, drop_out=0.5, lr=0.001):
+    def __init__(self, size=(224, 224), include_top=True, drop_out=0.5, lr=0.001, use_bn=True):
         self.drop_out = drop_out
         self.lr = lr
+        self.use_bn = use_bn
         self.FILE_PATH = 'http://files.fast.ai/models/'
         self.create(size, include_top)
         self.get_classes()
-
 
     def get_classes(self):
         fname = 'imagenet_class_index.json'
@@ -68,7 +68,8 @@ class Vgg16BNCustom():
     def FCBlock(self):
         model = self.model
         model.add(Dense(4096, activation='relu'))
-        model.add(BatchNormalization())
+        if self.use_bn:
+            model.add(BatchNormalization())
         model.add(Dropout(self.drop_out))
 
     def create(self, size, include_top):
