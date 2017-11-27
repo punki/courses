@@ -121,7 +121,7 @@ class Vgg16Custom():
         model = self.model
         model.add(Dense(4096, activation='relu'))
 
-        if not self.use_bn:
+        if self.use_bn:
             model.add(BatchNormalization())
 
         model.add(Dropout(self.drop_out))
