@@ -176,6 +176,8 @@ class Vgg16Custom():
 
         self.FCBlockBN()
         self.FCBlockBN()
+        self.FCBlockBN()
+        self.FCBlockBN()
 
         model.add(Dense(num, activation='softmax'))
         self.compile()
