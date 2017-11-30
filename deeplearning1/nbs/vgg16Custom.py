@@ -20,11 +20,12 @@ from keras.preprocessing import image
 from keras import backend as K
 
 K.set_image_dim_ordering('th')
-#sate farm
+# sate farm
 vgg_mean = np.array([103.939, 116.779, 123.68], dtype=np.float32).reshape((3, 1, 1))
 
-#normal
-#vgg_mean = np.array([123.68, 116.779, 103.939], dtype=np.float32).reshape((3, 1, 1))
+
+# normal
+# vgg_mean = np.array([123.68, 116.779, 103.939], dtype=np.float32).reshape((3, 1, 1))
 
 
 def vgg_preprocess(x):
@@ -159,7 +160,7 @@ class Vgg16Custom():
         return gen.flow_from_directory(path, target_size=(224, 224),
                                        class_mode=class_mode, shuffle=shuffle, batch_size=batch_size)
 
-    def ft(self, num):
+    def ft(self, num, number_of_bn):
         """
             Replace the last layer of the model with a Dense (fully connected) layer of num neurons.
             Will also lock the weights of all layers except the new layer so that we only learn
@@ -174,15 +175,13 @@ class Vgg16Custom():
         model.pop()
         for layer in model.layers: layer.trainable = False
 
-        self.FCBlockBN()
-        self.FCBlockBN()
-        self.FCBlockBN()
-        self.FCBlockBN()
+        for i in range(number_of_bn):
+            self.FCBlockBN()
 
         model.add(Dense(num, activation='softmax'))
         self.compile()
 
-    def finetune(self, batches):
+    def finetune(self, batches, number_of_bn=2):
         """
             Modifies the original VGG16 network architecture and updates self.classes for new training data.
             
@@ -190,7 +189,7 @@ class Vgg16Custom():
                 batches : A keras.preprocessing.image.ImageDataGenerator object.
                           See definition for get_batches().
         """
-        self.ft(batches.nb_class)
+        self.ft(batches.nb_class, number_of_bn)
         classes = list(iter(batches.class_indices))  # get a list of all the class labels
 
         # batches.class_indices is a dict with the class name as key and an index as value
